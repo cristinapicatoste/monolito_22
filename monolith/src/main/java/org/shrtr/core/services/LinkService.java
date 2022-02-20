@@ -1,19 +1,12 @@
 package org.shrtr.core.services;
 
 import lombok.RequiredArgsConstructor;
-import org.shrtr.core.controllers.AuthenticationController;
 import org.shrtr.core.domain.entities.Link;
 import org.shrtr.core.domain.entities.User;
 import org.shrtr.core.domain.repositories.LinksRepository;
-import org.shrtr.core.domain.repositories.UsersRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.ValidationException;
-import java.security.Principal;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
