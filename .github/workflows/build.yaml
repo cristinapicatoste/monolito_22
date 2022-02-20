@@ -27,4 +27,4 @@ jobs:
         with:
           context: monolith
           push: true
-          tags: cristinapicatoste/monolith:latest,cristinapicatoste/monolith:${{ env.GITHUB_SHA }}
+          tags: cristinapicatoste/monolith_22:latest,cristinapicatoste/monolith_22:${{ env.GITHUB_SHA }}
