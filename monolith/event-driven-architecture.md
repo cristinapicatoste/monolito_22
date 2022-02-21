@@ -1,12 +1,5 @@
 # Event-Driven Architecture
 
-Servicio A: publica, envía
-Servicio B: consume, escucha
-
-Evento
-
-Event Stream
-
 ### Req-Res vs Event streaming
 
 El publisher necesita saber quién consumirá los eventos; sin embargo, en event streaming no lo necesitamos.
