@@ -61,7 +61,8 @@ Nos facilita crearlo una vez y no replicarlo cada vez.
 
 ### 9. Network interface
 
-...
+complete this section
+
 
 ## Orden
 
