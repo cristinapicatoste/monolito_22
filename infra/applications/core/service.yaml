@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: core-service
+  namespace: default
+spec:
+  selector:
+    component: core-deployment #Deployment al que apunta el servicio
+  ports:
+    - name: 8080tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+
+  type: ClusterIP #asigna una ip dentro del cluster que no lo expone; no se puede acceder desde fuera
+
