@@ -1,0 +1,14 @@
+#kubectl apply -f ./db/service.yaml
+#kubectl get services
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-deployment #service?
+spec:
+  selector:
+    component: mariadb-deployment #Deployment al que apunta el servicio
+  ports:
+    - port: 3306
+  type: ClusterIP #asigna una ip dentro del cluster que no lo expone; no se puede acceder desde fuera
+
