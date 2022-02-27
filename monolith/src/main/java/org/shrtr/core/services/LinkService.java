@@ -1,21 +1,25 @@
 package org.shrtr.core.services;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.shrtr.core.domain.entities.Link;
+import org.shrtr.core.domain.entities.LinkMetric;
 import org.shrtr.core.domain.entities.User;
+import org.shrtr.core.domain.repositories.LinkMetricsRepository;
 import org.shrtr.core.domain.repositories.LinksRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LinkService {
   private final LinksRepository linksRepository;
+  private final LinkMetricsRepository linkMetricsRepository;
 
   @Transactional
   public Link create(String targetUrl, User user) {
@@ -27,12 +31,36 @@ public class LinkService {
     link.setCounter(0);
     link.setShortened(randomStringAlphaNumeric(8));
     linksRepository.save(link);
+
     return link;
+  }
+
+  public List<LinkMetric> findLinkMetrics(Link link, LocalDate from, LocalDate to) {
+    return linkMetricsRepository.findAllByDateBetweenAndLink(from, to, link);
   }
 
   @Transactional
   public Optional<Link> findForRedirect(String shortened) {
-    return linksRepository.findByShortened(shortened);
+    Optional<Link> byShortened = linksRepository.findByShortened(shortened);
+    if (byShortened.isPresent()) {
+      LocalDate date = LocalDate.now();
+      Link link = byShortened.get();
+      Optional<LinkMetric> byLinkAndDate = linkMetricsRepository.findByLinkAndDate(link, date);
+      if (byLinkAndDate.isPresent()) {
+        LinkMetric linkMetric = byLinkAndDate.get();
+        linkMetric.setCount(linkMetric.getCount() + 1);
+        log.info("Count of {} is {}", link.getShortened(), linkMetric.getCount());
+        linkMetricsRepository.save(linkMetric);
+      } else {
+        LinkMetric linkMetric = new LinkMetric();
+        linkMetric.setLink(link);
+        linkMetric.setDate(date);
+        linkMetric.setCount(1);
+        log.info("Count of {} is {}", link.getShortened(), linkMetric.getCount());
+        linkMetricsRepository.save(linkMetric);
+      }
+    }
+    return byShortened;
   }
 
   @Transactional
