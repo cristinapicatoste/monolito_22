@@ -5,20 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "links")
+@Table(name = "link_metrics")
 @Setter
 @Getter
 @JsonIgnoreProperties("hibernateLazyInitializer")
-public class Link extends BaseEntity {
-  private String original;
-  @Column(unique = true)
-  private String shortened;
-  private int counter;
+public class LinkMetric extends BaseEntity {
+
+  private LocalDate date;
+
+  private long count = 0;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_id")
-  private User owner;
+  @JoinColumn(name = "link_id")
+  private Link link;
 
 }
