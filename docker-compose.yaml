@@ -13,7 +13,7 @@ services:
       MYSQL_DATABASE: 'shrtdb'
       MYSQL_USER: 'admin'
       MYSQL_PASSWORD: 'supersecret'
-  
+
   # configurar monolith
   monolith:
     build:
@@ -42,14 +42,14 @@ services:
   #    retries: 3
   
   # configurar tests
-  tests:
-    build:
-      context: e2e-tests
-      dockerfile: Dockerfile
-    depends_on:
-      - monolith
-    environment:
-      BASE_URL: 'http://monolith:8080'
+  #tests:
+  #  build:
+  #    context: e2e-tests
+  #    dockerfile: Dockerfile
+  #  depends_on:
+  #    - monolith
+  #  environment:
+  #    BASE_URL: 'http://monolith:8080'
   
   # configurar zookeeper
   zookeeper:
@@ -99,3 +99,28 @@ services:
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
+  # configurar mongo
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - '5505:5505'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'root'
+      MONGO_INITDB_ROOT_PASSWORD: 'supersecureandsecretpassword'
+      MONGO_DATABASE: 'monolithmongodb'
+      MONGO_USER: 'admin'
+
+  # configurar consumer_reporting_service
+  consumer_reporting_service:
+    build:
+      context: consumer_reporting_service
+      # dockerfile: Dockerfile si el nombre de la carpeta coincide con Dockerfile, no hace falta especificar el nombre del archivo
+    depends_on:
+      - mongo
+      - kafka
+    ports:
+      - '4044:4044'
+    # environment:
+      # SPRING_DATASOURCE_URL: 'jdbc:mariadb://mariadb:3306/shrtdb'
+      # configuración para conectar con kafka y pasarle los datos a mongo
