@@ -9,10 +9,11 @@ const client = new MongoClient(url);
 
 // Database Name
 const dbName = 'consumer_report_service';
+const brokers = (process.env.KAFKA_BROKERS) || 'kafka:9092').split(',');
 
 const kafka = new Kafka({
   clientId: 'my-app',
-  brokers: ['kafka1:9092', 'kafka2:9092']
+  brokers: ['kafka1:9092', 'kafka2:9092'] // coger por variable de entorno
 });
 
 const consumer = kafka.consumer({ groupId: 'test-group' });
